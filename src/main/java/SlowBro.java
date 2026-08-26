@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class SlowBro {
     public static void main(String[] args) {
         String divider = "____________________________________________________________";
@@ -15,8 +17,25 @@ public class SlowBro {
         System.out.println("What can I do for you?");
         System.out.println(divider);
 
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            String input = scanner.nextLine();
+
+            if (input.equals("bye")) {
+                break;
+            }
+
+            System.out.println(divider);
+            System.out.println(input);
+            System.out.println(divider);
+        }
+
         // Exit
+        System.out.println(divider);
         System.out.println("Bye. Hope to see you again soon!");
         System.out.println(divider);
+
+        scanner.close();
     }
 }
