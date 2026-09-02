@@ -1,6 +1,10 @@
+package seedu.slowbro;
+
 import java.util.Scanner;
 
+/** Runs the Slowbro task-list application. */
 public class SlowBro {
+    /** Starts the application and processes commands until the user exits. */
     public static void main(String[] args) {
         String divider = "____________________________________________________________";
 
