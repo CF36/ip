@@ -18,7 +18,7 @@ public class SlowBro {
         System.out.println(divider);
 
         Scanner scanner = new Scanner(System.in);
-        String[] tasks = new String[100];
+        Task[] tasks = new Task[100];
         int taskCount = 0;
 
         while (true) {
@@ -28,12 +28,41 @@ public class SlowBro {
                 break;
             } else if (input.equals("list")) {
                 System.out.println(divider);
+                System.out.println(" Here are the tasks in your list:");
                 for (int i = 0; i < taskCount; i++) {
-                    System.out.println(" " + (i + 1) + ". " + tasks[i]);
+                    System.out.println(" " + (i + 1) + ".[" + tasks[i].getStatusIcon()
+                            + "] " + tasks[i].getDescription());
                 }
                 System.out.println(divider);
+            } else if (input.startsWith("mark ") || input.startsWith("unmark ")) {
+                boolean shouldUnmark = input.startsWith("unmark ");
+                String indexText = input.substring(shouldUnmark ? 7 : 5).trim();
+                try {
+                    int index = Integer.parseInt(indexText) - 1;
+                    if (index < 0 || index >= taskCount) {
+                        throw new NumberFormatException();
+                    }
+                    if (shouldUnmark) {
+                        tasks[index].unmarkAsDone();
+                    } else {
+                        tasks[index].markAsDone();
+                    }
+                    System.out.println(divider);
+                    if (shouldUnmark) {
+                        System.out.println(" OK, I've marked this task as not done yet:");
+                    } else {
+                        System.out.println(" Nice! I've marked this task as done:");
+                    }
+                    System.out.println("   [" + tasks[index].getStatusIcon() + "] "
+                            + tasks[index].getDescription());
+                    System.out.println(divider);
+                } catch (NumberFormatException e) {
+                    System.out.println(divider);
+                    System.out.println(" Please provide a valid task number.");
+                    System.out.println(divider);
+                }
             } else {
-                tasks[taskCount] = input;
+                tasks[taskCount] = new Task(input);
                 taskCount++;
                 System.out.println(divider);
                 System.out.println(" added: " + input);
@@ -49,3 +78,4 @@ public class SlowBro {
         scanner.close();
     }
 }
+
