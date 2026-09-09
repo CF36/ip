@@ -7,6 +7,43 @@ public class SlowBro {
     private static final String DIVIDER =
             "____________________________________________________________";
     private static final int MAX_TASK_COUNT = 100;
+    private static final String BYE_COMMAND = "bye";
+    private static final String LIST_COMMAND = "list";
+    private static final String MARK_COMMAND_PREFIX = "mark ";
+    private static final String UNMARK_COMMAND_PREFIX = "unmark ";
+    private static final String TODO_COMMAND_PREFIX = "todo ";
+    private static final String DEADLINE_COMMAND_PREFIX = "deadline ";
+    private static final String EVENT_COMMAND_PREFIX = "event ";
+    private static final String BY_SEPARATOR = " /by ";
+    private static final String FROM_SEPARATOR = " /from ";
+    private static final String TO_SEPARATOR = " /to ";
+    private static final int MARK_COMMAND_LENGTH = MARK_COMMAND_PREFIX.length();
+    private static final int UNMARK_COMMAND_LENGTH = UNMARK_COMMAND_PREFIX.length();
+    private static final int TODO_COMMAND_LENGTH = TODO_COMMAND_PREFIX.length();
+    private static final int DEADLINE_COMMAND_LENGTH = DEADLINE_COMMAND_PREFIX.length();
+    private static final int EVENT_COMMAND_LENGTH = EVENT_COMMAND_PREFIX.length();
+    private static final int FROM_SEPARATOR_LENGTH = FROM_SEPARATOR.length();
+    private static final int TO_SEPARATOR_LENGTH = TO_SEPARATOR.length();
+    private static final String TASK_LIST_HEADER =
+            " Here are the tasks in your list:";
+    private static final String TASK_ADDED_HEADER =
+            " Got it. I've added this task:";
+    private static final String TASK_COUNT_FORMAT =
+            " Now you have %d tasks in the list.";
+    private static final String INVALID_TASK_NUMBER_MESSAGE =
+            " Please provide a valid task number.";
+    private static final String INVALID_COMMAND_MESSAGE =
+            " Sorry, I couldn't understand that command.";
+    private static final String MARKED_DONE_MESSAGE =
+            " Nice! I've marked this task as done:";
+    private static final String MARKED_NOT_DONE_MESSAGE =
+            " OK, I've marked this task as not done yet:";
+    private static final String DEADLINE_USAGE_MESSAGE =
+            " Usage: deadline <description> /by <date or time>.";
+    private static final String EVENT_USAGE_MESSAGE =
+            " Usage: event <description> /from <start> /to <end>.";
+    private static final String EXIT_MESSAGE =
+            "Bye. Hope to see you again soon!";
 
     /** Starts the application and processes commands until the user exits. */
     public static void main(String[] args) {
@@ -19,7 +56,7 @@ public class SlowBro {
         while (true) {
             String input = scanner.nextLine();
 
-            if (input.equals("bye")) {
+            if (input.equals(BYE_COMMAND)) {
                 break;
             } else {
                 taskCount = handleCommand(input, tasks, taskCount);
@@ -45,50 +82,51 @@ public class SlowBro {
     }
 
     private static int handleCommand(String input, Task[] tasks, int taskCount) {
-        if (input.equals("list")) {
+        if (input.equals(LIST_COMMAND)) {
             listTasks(tasks, taskCount);
             return taskCount;
         }
 
-        if (input.startsWith("mark ") || input.startsWith("unmark ")) {
+        if (input.startsWith(MARK_COMMAND_PREFIX)
+                || input.startsWith(UNMARK_COMMAND_PREFIX)) {
             markTask(input, tasks, taskCount);
             return taskCount;
         }
 
-        if (input.startsWith("todo ")) {
-            addTask(new Todo(input.substring(5).trim()), tasks, taskCount);
+        if (input.startsWith(TODO_COMMAND_PREFIX)) {
+            addTask(new Todo(input.substring(TODO_COMMAND_LENGTH).trim()), tasks, taskCount);
             return taskCount + 1;
         }
 
-        if (input.startsWith("deadline ")) {
-            String command = input.substring(9);
-            int byIndex = command.indexOf(" /by ");
+        if (input.startsWith(DEADLINE_COMMAND_PREFIX)) {
+            String command = input.substring(DEADLINE_COMMAND_LENGTH);
+            int byIndex = command.indexOf(BY_SEPARATOR);
             if (byIndex >= 0) {
                 String description = command.substring(0, byIndex).trim();
-                String by = command.substring(byIndex + 5).trim();
+                String by = command.substring(byIndex + BY_SEPARATOR.length()).trim();
                 addTask(new Deadline(description, by), tasks, taskCount);
                 return taskCount + 1;
             }
 
             printInvalidCommand(
-                    " Usage: deadline <description> /by <date or time>.");
+                    DEADLINE_USAGE_MESSAGE);
             return taskCount;
         }
 
-        if (input.startsWith("event ")) {
-            String command = input.substring(6);
-            int fromIndex = command.indexOf(" /from ");
-            int toIndex = command.indexOf(" /to ");
+        if (input.startsWith(EVENT_COMMAND_PREFIX)) {
+            String command = input.substring(EVENT_COMMAND_LENGTH);
+            int fromIndex = command.indexOf(FROM_SEPARATOR);
+            int toIndex = command.indexOf(TO_SEPARATOR);
             if (fromIndex >= 0 && toIndex > fromIndex) {
                 String description = command.substring(0, fromIndex).trim();
-                String from = command.substring(fromIndex + 7, toIndex).trim();
-                String to = command.substring(toIndex + 5).trim();
+                String from = command.substring(fromIndex + FROM_SEPARATOR_LENGTH, toIndex).trim();
+                String to = command.substring(toIndex + TO_SEPARATOR_LENGTH).trim();
                 addTask(new Event(description, from, to), tasks, taskCount);
                 return taskCount + 1;
             }
 
             printInvalidCommand(
-                    " Usage: event <description> /from <start> /to <end>.");
+                    EVENT_USAGE_MESSAGE);
             return taskCount;
         }
 
@@ -98,23 +136,26 @@ public class SlowBro {
 
     private static void printInvalidCommand(String usageMessage) {
         System.out.println(DIVIDER);
-        System.out.println(" Sorry, I couldn't understand that command.");
+        System.out.println(INVALID_COMMAND_MESSAGE);
         System.out.println(usageMessage);
         System.out.println(DIVIDER);
     }
 
     private static void listTasks(Task[] tasks, int taskCount) {
         System.out.println(DIVIDER);
-        System.out.println(" Here are the tasks in your list:");
+        System.out.println(TASK_LIST_HEADER);
         for (int i = 0; i < taskCount; i++) {
-            System.out.println(" " + (i + 1) + "." + tasks[i]);
+            System.out.println(String.format(" %d.%s", i + 1, tasks[i]));
         }
         System.out.println(DIVIDER);
     }
 
     private static void markTask(String input, Task[] tasks, int taskCount) {
-        boolean shouldUnmark = input.startsWith("unmark ");
-        String indexText = input.substring(shouldUnmark ? 7 : 5).trim();
+        boolean shouldUnmark = input.startsWith(UNMARK_COMMAND_PREFIX);
+        int commandLength = shouldUnmark
+                ? UNMARK_COMMAND_LENGTH
+                : MARK_COMMAND_LENGTH;
+        String indexText = input.substring(commandLength).trim();
 
         try {
             int index = Integer.parseInt(indexText) - 1;
@@ -125,16 +166,16 @@ public class SlowBro {
             System.out.println(DIVIDER);
             if (shouldUnmark) {
                 tasks[index].unmarkAsDone();
-                System.out.println(" OK, I've marked this task as not done yet:");
+                System.out.println(MARKED_NOT_DONE_MESSAGE);
             } else {
                 tasks[index].markAsDone();
-                System.out.println(" Nice! I've marked this task as done:");
+                System.out.println(MARKED_DONE_MESSAGE);
             }
             System.out.println(tasks[index]);
             System.out.println(DIVIDER);
         } catch (NumberFormatException e) {
             System.out.println(DIVIDER);
-            System.out.println(" Please provide a valid task number.");
+            System.out.println(INVALID_TASK_NUMBER_MESSAGE);
             System.out.println(DIVIDER);
         }
     }
@@ -142,15 +183,15 @@ public class SlowBro {
     private static void addTask(Task task, Task[] tasks, int taskCount) {
         tasks[taskCount] = task;
         System.out.println(DIVIDER);
-        System.out.println(" Got it. I've added this task:");
+        System.out.println(TASK_ADDED_HEADER);
         System.out.println("   " + task);
-        System.out.println(" Now you have " + (taskCount + 1) + " tasks in the list.");
+        System.out.println(String.format(TASK_COUNT_FORMAT, taskCount + 1));
         System.out.println(DIVIDER);
     }
 
     private static void printExitMessage() {
         System.out.println(DIVIDER);
-        System.out.println("Bye. Hope to see you again soon!");
+        System.out.println(EXIT_MESSAGE);
         System.out.println(DIVIDER);
     }
 }

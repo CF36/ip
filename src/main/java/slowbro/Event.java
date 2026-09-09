@@ -2,6 +2,9 @@ package slowbro;
 
 /** Represents a task with a specified starting and ending date or time. */
 public class Event extends Task {
+    private static final String EVENT_PREFIX = "[E]";
+    private static final String EVENT_FORMAT = " (from: %s to: %s)";
+
     private final String from;
     private final String to;
 
@@ -20,6 +23,7 @@ public class Event extends Task {
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
+        return EVENT_PREFIX + super.toString()
+                + String.format(EVENT_FORMAT, from, to);
     }
 }

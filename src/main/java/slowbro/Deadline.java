@@ -2,6 +2,9 @@ package slowbro;
 
 /** Represents a task that must be completed by a specified date or time. */
 public class Deadline extends Task {
+    private static final String DEADLINE_PREFIX = "[D]";
+    private static final String DEADLINE_FORMAT = " (by: %s)";
+
     private final String by;
 
     /**
@@ -17,6 +20,7 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + by + ")";
+        return DEADLINE_PREFIX + super.toString()
+                + String.format(DEADLINE_FORMAT, by);
     }
 }

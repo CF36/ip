@@ -2,6 +2,10 @@ package slowbro;
 
 /** Represents a task that can be marked as done or not done. */
 public class Task {
+    private static final String DONE_STATUS_ICON = "X";
+    private static final String UNDONE_STATUS_ICON = " ";
+    private static final String STATUS_FORMAT = "[%s] ";
+
     private final String description;
     private boolean isDone;
 
@@ -13,7 +17,7 @@ public class Task {
 
     /** Returns the status icon for this task. */
     public String getStatusIcon() {
-        return (isDone ? "X" : " "); // mark done task with X
+        return isDone ? DONE_STATUS_ICON : UNDONE_STATUS_ICON;
     }
 
     public String getDescription() {
@@ -33,6 +37,6 @@ public class Task {
     // Overriding the toString() method
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + description;
+        return String.format(STATUS_FORMAT, getStatusIcon()) + description;
     }
 }
