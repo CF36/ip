@@ -9,7 +9,11 @@ public class Task {
     private final String description;
     private boolean isDone;
 
-    /** Creates a task with the given description. */
+    /**
+     * Creates a task with the given description.
+     *
+     * @param description the task description
+     */
     public Task(String description) {
         this.description = description;
         this.isDone = false;
@@ -20,6 +24,11 @@ public class Task {
         return isDone ? DONE_STATUS_ICON : UNDONE_STATUS_ICON;
     }
 
+    /**
+     * Returns the task description.
+     *
+     * @return the task description
+     */
     public String getDescription() {
         return description;
     }
@@ -34,7 +43,6 @@ public class Task {
         isDone = false;
     }
 
-    // Overriding the toString() method
     @Override
     public String toString() {
         return String.format(STATUS_FORMAT, getStatusIcon()) + description;

@@ -1,12 +1,13 @@
 package slowbro;
 
-public class Todo extends Task{
+/** Represents a task without a deadline or event period. */
+public class Todo extends Task {
     private static final String TODO_PREFIX = "[T]";
 
     /**
      * Creates a task with the given description.
      *
-     * @param description
+     * @param description the task description
      */
     public Todo(String description) {
         super(description);
