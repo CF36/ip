@@ -69,6 +69,10 @@ public class SlowBro {
                 addTask(new Deadline(description, by), tasks, taskCount);
                 return taskCount + 1;
             }
+
+            printInvalidCommand(
+                    " Usage: deadline <description> /by <date or time>.");
+            return taskCount;
         }
 
         if (input.startsWith("event ")) {
@@ -82,10 +86,21 @@ public class SlowBro {
                 addTask(new Event(description, from, to), tasks, taskCount);
                 return taskCount + 1;
             }
+
+            printInvalidCommand(
+                    " Usage: event <description> /from <start> /to <end>.");
+            return taskCount;
         }
 
         addTask(new Todo(input), tasks, taskCount);
         return taskCount + 1;
+    }
+
+    private static void printInvalidCommand(String usageMessage) {
+        System.out.println(DIVIDER);
+        System.out.println(" Sorry, I couldn't understand that command.");
+        System.out.println(usageMessage);
+        System.out.println(DIVIDER);
     }
 
     private static void listTasks(Task[] tasks, int taskCount) {
