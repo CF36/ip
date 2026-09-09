@@ -1,4 +1,4 @@
-package seedu.slowbro;
+package slowbro;
 
 /** Represents a task that can be marked as done or not done. */
 public class Task {
@@ -28,5 +28,11 @@ public class Task {
     /** Marks this task as not done. */
     public void unmarkAsDone() {
         isDone = false;
+    }
+
+    // Overriding the toString() method
+    @Override
+    public String toString() {
+        return "[" + getStatusIcon() + "] " + description;
     }
 }
