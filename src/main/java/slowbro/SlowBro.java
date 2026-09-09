@@ -106,10 +106,7 @@ public class SlowBro {
                     addTask(new Deadline(description, by), tasks, taskCount);
                     return taskCount + 1;
                 }
-
-                printInvalidCommand(
-                        DEADLINE_USAGE_MESSAGE);
-                return taskCount;
+                throw new InvalidCommandException(DEADLINE_USAGE_MESSAGE);
             } else if (input.startsWith(EVENT_COMMAND_PREFIX)) {
                 String command = input.substring(EVENT_COMMAND_LENGTH);
                 int fromIndex = command.indexOf(FROM_SEPARATOR);
@@ -121,10 +118,7 @@ public class SlowBro {
                     addTask(new Event(description, from, to), tasks, taskCount);
                     return taskCount + 1;
                 }
-
-                printInvalidCommand(
-                        EVENT_USAGE_MESSAGE);
-                return taskCount;
+                throw new InvalidCommandException(EVENT_USAGE_MESSAGE);
             } else {
                 throw new InvalidCommandException(COMMAND_USAGE_MESSAGE);
             }
