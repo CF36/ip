@@ -18,6 +18,11 @@ public class Deadline extends Task {
         this.by = by;
     }
 
+    /** Returns the deadline details. */
+    public String getBy() {
+        return by;
+    }
+
     @Override
     public String toString() {
         return DEADLINE_PREFIX + super.toString()
