@@ -1,5 +1,6 @@
 package slowbro;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /** Runs the Slowbro task-list application. */
@@ -58,7 +59,7 @@ public class SlowBro {
     /** Starts the application and processes commands until the user exits. */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[MAX_TASK_COUNT];
+        ArrayList<Task> tasks = new ArrayList<Task>();
         int taskCount = 0;
 
         printGreeting();
@@ -95,7 +96,7 @@ public class SlowBro {
         System.out.println(DIVIDER);
     }
 
-    private static int handleCommand (String input, Task[] tasks, int taskCount) {
+    private static int handleCommand (String input, ArrayList<Task> tasks, int taskCount) {
         try {
             if (input.trim().isEmpty()) {
                 throw new InvalidCommandException(EMPTY_COMMAND_MESSAGE);
@@ -158,16 +159,16 @@ public class SlowBro {
         System.out.println(DIVIDER);
     }
 
-    private static void listTasks(Task[] tasks, int taskCount) {
+    private static void listTasks(ArrayList<Task> tasks, int taskCount) {
         System.out.println(DIVIDER);
         System.out.println(TASK_LIST_HEADER);
         for (int i = 0; i < taskCount; i++) {
-            System.out.println(String.format(" %d.%s", i + 1, tasks[i]));
+            System.out.println(String.format(" %d.%s", i + 1, tasks.get(i)));
         }
         System.out.println(DIVIDER);
     }
 
-    private static void markTask(String input, Task[] tasks, int taskCount) {
+    private static void markTask(String input, ArrayList<Task> tasks, int taskCount) {
         boolean shouldUnmark = input.startsWith(UNMARK_COMMAND_PREFIX);
         int commandLength = shouldUnmark
                 ? UNMARK_COMMAND_LENGTH
@@ -182,13 +183,13 @@ public class SlowBro {
 
             System.out.println(DIVIDER);
             if (shouldUnmark) {
-                tasks[index].unmarkAsDone();
+                tasks.get(index).unmarkAsDone();
                 System.out.println(MARKED_NOT_DONE_MESSAGE);
             } else {
-                tasks[index].markAsDone();
+                tasks.get(index).markAsDone();
                 System.out.println(MARKED_DONE_MESSAGE);
             }
-            System.out.println(tasks[index]);
+            System.out.println(tasks.get(index));
             System.out.println(DIVIDER);
         } catch (NumberFormatException e) {
             System.out.println(DIVIDER);
@@ -201,12 +202,12 @@ public class SlowBro {
         }
     }
 
-    private static void addTask(Task task, Task[] tasks, int taskCount) {
+    private static void addTask(Task task, ArrayList<Task> tasks, int taskCount) {
         if (taskCount >= MAX_TASK_COUNT) {
             throw new IllegalStateException(TASK_LIMIT_MESSAGE);
         }
 
-        tasks[taskCount] = task;
+        tasks.add(task);
         System.out.println(DIVIDER);
         System.out.println(TASK_ADDED_HEADER);
         System.out.println("   " + task);
