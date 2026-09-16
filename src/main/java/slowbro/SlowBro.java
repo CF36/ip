@@ -67,7 +67,11 @@ public class SlowBro {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Task> tasks = new ArrayList<Task>();
-        int taskCount = 0;
+        Storage storage = new Storage();
+        ArrayList<Task> loadedTasks = storage.load();
+        int taskCount = loadedTasks.size();
+        tasks.addAll(loadedTasks);
+//        System.arraycopy(loadedTasks, 0, tasks, 0, taskCount);
 
         printGreeting();
 
@@ -81,7 +85,7 @@ public class SlowBro {
             if (input.equals(BYE_COMMAND)) {
                 break;
             } else {
-                taskCount = handleCommand(input, tasks, taskCount);
+                taskCount = handleCommand(input, tasks, taskCount, storage);
             }
         }
 
@@ -102,8 +106,7 @@ public class SlowBro {
         System.out.println("What can I do for you?");
         System.out.println(DIVIDER);
     }
-
-    private static int handleCommand (String input, ArrayList<Task> tasks, int taskCount) {
+    private static int handleCommand(String input, ArrayList<Task> tasks, int taskCount, Storage storage) {
         try {
             if (input.trim().isEmpty()) {
                 throw new InvalidCommandException(EMPTY_COMMAND_MESSAGE);
@@ -114,7 +117,7 @@ public class SlowBro {
                 return taskCount;
             } else if (input.startsWith(MARK_COMMAND_PREFIX)
                     || input.startsWith(UNMARK_COMMAND_PREFIX)) {
-                markTask(input, tasks, taskCount);
+                markTask(input, tasks, taskCount, storage);
                 return taskCount;
             } else if (input.startsWith(TODO_COMMAND_PREFIX)) {
                 if (input.equals(TODO_COMMAND_PREFIX)) {
@@ -123,6 +126,7 @@ public class SlowBro {
                 String description = input.substring(TODO_COMMAND_LENGTH).trim();
                 validateTaskFields(description);
                 addTask(new Todo(description), tasks, taskCount);
+                storage.save(tasks, taskCount + 1);
                 return taskCount + 1;
             } else if (input.startsWith(DEADLINE_COMMAND_PREFIX)) {
                 String command = input.substring(DEADLINE_COMMAND_LENGTH);
@@ -132,6 +136,7 @@ public class SlowBro {
                     String by = command.substring(byIndex + BY_SEPARATOR.length()).trim();
                     validateTaskFields(description, by);
                     addTask(new Deadline(description, by), tasks, taskCount);
+                    storage.save(tasks, taskCount + 1);
                     return taskCount + 1;
                 }
                 throw new InvalidCommandException(DEADLINE_USAGE_MESSAGE);
@@ -145,6 +150,7 @@ public class SlowBro {
                     String to = command.substring(toIndex + TO_SEPARATOR_LENGTH).trim();
                     validateTaskFields(description, from, to);
                     addTask(new Event(description, from, to), tasks, taskCount);
+                    storage.save(tasks, taskCount + 1);
                     return taskCount + 1;
                 }
                 throw new InvalidCommandException(EVENT_USAGE_MESSAGE);
@@ -200,7 +206,7 @@ public class SlowBro {
         System.out.println(DIVIDER);
     }
 
-    private static void markTask(String input, ArrayList<Task> tasks, int taskCount) {
+    private static void markTask(String input, ArrayList<Task> tasks, int taskCount, Storage storage) {
         boolean shouldUnmark = input.startsWith(UNMARK_COMMAND_PREFIX);
         int commandLength = shouldUnmark
                 ? UNMARK_COMMAND_LENGTH
@@ -223,6 +229,7 @@ public class SlowBro {
             }
             System.out.println(tasks.get(index));
             System.out.println(DIVIDER);
+            storage.save(tasks, taskCount);
         } catch (NumberFormatException e) {
             System.out.println(DIVIDER);
             System.out.println(INVALID_TASK_NUMBER_MESSAGE);
