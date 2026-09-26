@@ -163,9 +163,9 @@ public class SlowBro {
                 throw new InvalidCommandException(COMMAND_USAGE_MESSAGE);
             }
         } catch (InvalidCommandException e) {
-            printInvalidCommand(e.getUsageMessage());
+            UI.printInvalidCommand(e.getUsageMessage());
         } catch (IllegalStateException e) {
-            printInvalidCommand(e.getMessage());
+            UI.printInvalidCommand(e.getMessage());
         } catch (IndexOutOfBoundsException e) {
             System.out.println(DIVIDER);
             System.out.println(OUT_OF_BOUNDS_TASK_NUMBER_MESSAGE);
@@ -178,12 +178,6 @@ public class SlowBro {
         return taskCount;
     }
 
-    private static void printInvalidCommand(String usageMessage) {
-        System.out.println(DIVIDER);
-        System.out.println(INVALID_COMMAND_MESSAGE);
-        System.out.println(usageMessage);
-        System.out.println(DIVIDER);
-    }
 
     private static void markTask(String input, ArrayList<Task> tasks, int taskCount, Storage storage) {
         boolean shouldUnmark = input.startsWith(UNMARK_COMMAND_PREFIX);

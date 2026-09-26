@@ -88,4 +88,11 @@ public class UI {
         }
         System.out.println(DIVIDER);
     }
+
+    public static void printInvalidCommand(String usageMessage) {
+        System.out.println(DIVIDER);
+        System.out.println(INVALID_COMMAND_MESSAGE);
+        System.out.println(usageMessage);
+        System.out.println(DIVIDER);
+    }
 }
