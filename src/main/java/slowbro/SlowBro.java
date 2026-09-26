@@ -100,7 +100,7 @@ public class SlowBro {
             }
 
             if (input.equals(LIST_COMMAND)) {
-                listTasks(tasks, taskCount);
+                UI.listTasks(tasks, taskCount);
                 return taskCount;
             } else if (input.startsWith(MARK_COMMAND_PREFIX)
                     || input.startsWith(UNMARK_COMMAND_PREFIX)) {
@@ -182,15 +182,6 @@ public class SlowBro {
         System.out.println(DIVIDER);
         System.out.println(INVALID_COMMAND_MESSAGE);
         System.out.println(usageMessage);
-        System.out.println(DIVIDER);
-    }
-
-    private static void listTasks(ArrayList<Task> tasks, int taskCount) {
-        System.out.println(DIVIDER);
-        System.out.println(TASK_LIST_HEADER);
-        for (int i = 0; i < taskCount; i++) {
-            System.out.println(String.format(" %d.%s", i + 1, tasks.get(i)));
-        }
         System.out.println(DIVIDER);
     }
 

@@ -1,5 +1,7 @@
 package slowbro;
 
+import java.util.ArrayList;
+
 public class UI {
     private static final String DIVIDER =
             "____________________________________________________________";
@@ -75,6 +77,15 @@ public class UI {
     public static void printExitMessage() {
         System.out.println(DIVIDER);
         System.out.println(EXIT_MESSAGE);
+        System.out.println(DIVIDER);
+    }
+
+    public static void listTasks(ArrayList<Task> tasks, int taskCount) {
+        System.out.println(DIVIDER);
+        System.out.println(TASK_LIST_HEADER);
+        for (int i = 0; i < taskCount; i++) {
+            System.out.println(String.format(" %d.%s", i + 1, tasks.get(i)));
+        }
         System.out.println(DIVIDER);
     }
 }
