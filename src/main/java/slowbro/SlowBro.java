@@ -67,13 +67,13 @@ public class SlowBro {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Task> tasks = new ArrayList<Task>();
+        UI ui = new UI();
         Storage storage = new Storage();
         ArrayList<Task> loadedTasks = storage.load();
         int taskCount = loadedTasks.size();
         tasks.addAll(loadedTasks);
-//        System.arraycopy(loadedTasks, 0, tasks, 0, taskCount);
 
-        printGreeting();
+        ui.printGreeting();
 
         while (true) {
             if (!scanner.hasNextLine()) {
@@ -93,19 +93,6 @@ public class SlowBro {
         scanner.close();
     }
 
-    private static void printGreeting() {
-        String banner = "  ____  _               _                \n"
-                + " / ___|| | ___         | |__  _ __ ___  \n"
-                + " \\___ \\| |/ _ \\ \\ /\\ / / '_ \\| '__/ _ \\\n"
-                + "  ___) | | (_) \\ V  V /| |_) | | | (_) |\n"
-                + " |____/|_|\\___/ \\_/\\_/ |_.__/|_|  \\___/\n";
-
-        System.out.println(DIVIDER);
-        System.out.print(banner);
-        System.out.println("Hello! I'm Slowbro.");
-        System.out.println("What can I do for you?");
-        System.out.println(DIVIDER);
-    }
     private static int handleCommand(String input, ArrayList<Task> tasks, int taskCount, Storage storage) {
         try {
             if (input.trim().isEmpty()) {
