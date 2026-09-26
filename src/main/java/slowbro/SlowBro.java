@@ -220,11 +220,7 @@ public class SlowBro {
         }
 
         tasks.add(task);
-        System.out.println(DIVIDER);
-        System.out.println(TASK_ADDED_HEADER);
-        System.out.println("   " + task);
-        System.out.println(String.format(TASK_COUNT_FORMAT, taskCount + 1));
-        System.out.println(DIVIDER);
+        UI.printAddTask(task, taskCount);
     }
 
     private static void validateTaskFields(String... fields) throws InvalidCommandException {

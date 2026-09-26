@@ -95,4 +95,12 @@ public class UI {
         System.out.println(usageMessage);
         System.out.println(DIVIDER);
     }
+
+    public static void printAddTask(Task task, int taskCount) {
+        System.out.println(DIVIDER);
+        System.out.println(TASK_ADDED_HEADER);
+        System.out.println("   " + task);
+        System.out.println(String.format(TASK_COUNT_FORMAT, taskCount + 1));
+        System.out.println(DIVIDER);
+    }
 }
