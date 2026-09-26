@@ -89,7 +89,7 @@ public class SlowBro {
             }
         }
 
-        printExitMessage();
+        ui.printExitMessage();
         scanner.close();
     }
 
@@ -250,9 +250,4 @@ public class SlowBro {
         }
     }
 
-    private static void printExitMessage() {
-        System.out.println(DIVIDER);
-        System.out.println(EXIT_MESSAGE);
-        System.out.println(DIVIDER);
-    }
 }

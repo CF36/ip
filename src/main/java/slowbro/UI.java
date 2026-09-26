@@ -71,4 +71,10 @@ public class UI {
         System.out.println("What can I do for you?");
         System.out.println(DIVIDER);
     }
+
+    public static void printExitMessage() {
+        System.out.println(DIVIDER);
+        System.out.println(EXIT_MESSAGE);
+        System.out.println(DIVIDER);
+    }
 }
