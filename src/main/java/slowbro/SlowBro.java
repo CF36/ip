@@ -163,9 +163,7 @@ public class SlowBro {
         } catch (IllegalStateException e) {
             UI.printInvalidCommand(e.getMessage());
         } catch (IndexOutOfBoundsException e) {
-            System.out.println(DIVIDER);
-            System.out.println(OUT_OF_BOUNDS_TASK_NUMBER_MESSAGE);
-            System.out.println(DIVIDER);
+            UI.printIndexOutOfBounds();
         } catch (NumberFormatException e) {
             System.out.println(DIVIDER);
             System.out.println(INVALID_NUMBER_MESSAGE);
@@ -204,9 +202,7 @@ public class SlowBro {
             System.out.println(INVALID_TASK_NUMBER_MESSAGE);
             System.out.println(DIVIDER);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println(DIVIDER);
-            System.out.println(OUT_OF_BOUNDS_TASK_NUMBER_MESSAGE);
-            System.out.println(DIVIDER);
+            UI.printIndexOutOfBounds();
         }
     }
 

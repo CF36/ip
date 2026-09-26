@@ -111,4 +111,10 @@ public class UI {
         System.out.println(String.format(TASK_COUNT_FORMAT, taskCount - 1));
         System.out.println(DIVIDER);
     }
+
+    public static void printIndexOutOfBounds() {
+        System.out.println(DIVIDER);
+        System.out.println(OUT_OF_BOUNDS_TASK_NUMBER_MESSAGE);
+        System.out.println(DIVIDER);
+    }
 }
