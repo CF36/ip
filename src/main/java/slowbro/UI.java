@@ -103,4 +103,12 @@ public class UI {
         System.out.println(String.format(TASK_COUNT_FORMAT, taskCount + 1));
         System.out.println(DIVIDER);
     }
+
+    public static void printDeleteTask(ArrayList<Task> tasks, int taskCount, int index) {
+        System.out.println(DIVIDER);
+        System.out.println(TASK_DELETED_HEADER);
+        System.out.println("   " + tasks.get(index));
+        System.out.println(String.format(TASK_COUNT_FORMAT, taskCount - 1));
+        System.out.println(DIVIDER);
+    }
 }

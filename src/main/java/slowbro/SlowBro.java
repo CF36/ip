@@ -150,12 +150,8 @@ public class SlowBro {
                 if(index+1 > taskCount) {
                     throw new IndexOutOfBoundsException();
                 }
-                System.out.println(DIVIDER);
-                System.out.println(TASK_DELETED_HEADER);
-                System.out.println("   " + tasks.get(index));
+                UI.printDeleteTask(tasks, taskCount, index);
                 taskCount -= 1;
-                System.out.println(String.format(TASK_COUNT_FORMAT, taskCount));
-                System.out.println(DIVIDER);
                 tasks.remove(index);
                 storage.save(tasks, taskCount);
                 return taskCount;
