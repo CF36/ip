@@ -170,6 +170,7 @@ public class SlowBro {
                 System.out.println(String.format(TASK_COUNT_FORMAT, taskCount));
                 System.out.println(DIVIDER);
                 tasks.remove(index);
+                storage.save(tasks, taskCount);
                 return taskCount;
             } else {
                 throw new InvalidCommandException(COMMAND_USAGE_MESSAGE);
