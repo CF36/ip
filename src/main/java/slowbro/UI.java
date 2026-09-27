@@ -117,4 +117,29 @@ public class UI {
         System.out.println(OUT_OF_BOUNDS_TASK_NUMBER_MESSAGE);
         System.out.println(DIVIDER);
     }
+
+    public static void printInvalidNumber() {
+        System.out.println(DIVIDER);
+        System.out.println(INVALID_NUMBER_MESSAGE);
+        System.out.println(DIVIDER);
+    }
+
+    public static void printInvalidTaskNumber() {
+        System.out.println(DIVIDER);
+        System.out.println(INVALID_TASK_NUMBER_MESSAGE);
+        System.out.println(DIVIDER);
+    }
+
+    public static void printMarkTask(ArrayList<Task> tasks, boolean shouldUnmark, int index) {
+        System.out.println(DIVIDER);
+        if (shouldUnmark) {
+            tasks.get(index).unmarkAsDone();
+            System.out.println(MARKED_NOT_DONE_MESSAGE);
+        } else {
+            tasks.get(index).markAsDone();
+            System.out.println(MARKED_DONE_MESSAGE);
+        }
+        System.out.println(tasks.get(index));
+        System.out.println(DIVIDER);
+    }
 }

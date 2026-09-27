@@ -165,9 +165,7 @@ public class SlowBro {
         } catch (IndexOutOfBoundsException e) {
             UI.printIndexOutOfBounds();
         } catch (NumberFormatException e) {
-            System.out.println(DIVIDER);
-            System.out.println(INVALID_NUMBER_MESSAGE);
-            System.out.println(DIVIDER);
+            UI.printInvalidNumber();
         }
         return taskCount;
     }
@@ -186,21 +184,10 @@ public class SlowBro {
                 throw new IndexOutOfBoundsException();
             }
 
-            System.out.println(DIVIDER);
-            if (shouldUnmark) {
-                tasks.get(index).unmarkAsDone();
-                System.out.println(MARKED_NOT_DONE_MESSAGE);
-            } else {
-                tasks.get(index).markAsDone();
-                System.out.println(MARKED_DONE_MESSAGE);
-            }
-            System.out.println(tasks.get(index));
-            System.out.println(DIVIDER);
+            UI.printMarkTask(tasks, shouldUnmark, index);
             storage.save(tasks, taskCount);
         } catch (NumberFormatException e) {
-            System.out.println(DIVIDER);
-            System.out.println(INVALID_TASK_NUMBER_MESSAGE);
-            System.out.println(DIVIDER);
+            UI.printInvalidTaskNumber();
         } catch (IndexOutOfBoundsException e) {
             UI.printIndexOutOfBounds();
         }
