@@ -147,14 +147,9 @@ public class SlowBro {
                     throw new InvalidCommandException(DELETE_USAGE_MESSAGE);
                 }
                 int index = Integer.parseInt(words[1])-1;
-                if(index+1 > taskCount) {
-                    throw new IndexOutOfBoundsException();
-                }
-                UI.printDeleteTask(tasks, taskCount, index);
-                taskCount -= 1;
-                tasks.remove(index);
-                storage.save(tasks, taskCount);
-                return taskCount;
+                deleteTask(tasks, taskCount, index);
+                storage.save(tasks, taskCount - 1);
+                return taskCount - 1;
             } else {
                 throw new InvalidCommandException(COMMAND_USAGE_MESSAGE);
             }
@@ -168,6 +163,14 @@ public class SlowBro {
             UI.printInvalidNumber();
         }
         return taskCount;
+    }
+
+    private static void deleteTask(ArrayList<Task> tasks, int taskCount, int index) {
+        if(index +1 > taskCount) {
+            throw new IndexOutOfBoundsException();
+        }
+        UI.printDeleteTask(tasks, taskCount, index);
+        tasks.remove(index);
     }
 
 
@@ -194,9 +197,9 @@ public class SlowBro {
     }
 
     private static void addTask(Task task, ArrayList<Task> tasks, int taskCount) {
-        if (taskCount >= MAX_TASK_COUNT) {
-            throw new IllegalStateException(TASK_LIMIT_MESSAGE);
-        }
+//        if (taskCount >= MAX_TASK_COUNT) {
+//            throw new IllegalStateException(TASK_LIMIT_MESSAGE);
+//        }
 
         tasks.add(task);
         UI.printAddTask(task, taskCount);
