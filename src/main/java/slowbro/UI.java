@@ -1,7 +1,5 @@
 package slowbro;
 
-import java.util.ArrayList;
-
 public class UI {
     private static final String DIVIDER =
             "____________________________________________________________";
@@ -80,10 +78,10 @@ public class UI {
         System.out.println(DIVIDER);
     }
 
-    public static void listTasks(ArrayList<Task> tasks, int taskCount) {
+    public static void listTasks(TaskList tasks) {
         System.out.println(DIVIDER);
         System.out.println(TASK_LIST_HEADER);
-        for (int i = 0; i < taskCount; i++) {
+        for (int i = 0; i < tasks.size(); i++) {
             System.out.println(String.format(" %d.%s", i + 1, tasks.get(i)));
         }
         System.out.println(DIVIDER);
@@ -104,11 +102,11 @@ public class UI {
         System.out.println(DIVIDER);
     }
 
-    public static void printDeleteTask(ArrayList<Task> tasks, int taskCount, int index) {
+    public static void printDeleteTask(Task task, int taskCount) {
         System.out.println(DIVIDER);
         System.out.println(TASK_DELETED_HEADER);
-        System.out.println("   " + tasks.get(index));
-        System.out.println(String.format(TASK_COUNT_FORMAT, taskCount - 1));
+        System.out.println("   " + task);
+        System.out.println(String.format(TASK_COUNT_FORMAT, taskCount));
         System.out.println(DIVIDER);
     }
 
@@ -130,13 +128,11 @@ public class UI {
         System.out.println(DIVIDER);
     }
 
-    public static void printMarkTask(ArrayList<Task> tasks, boolean shouldUnmark, int index) {
+    public static void printMarkTask(TaskList tasks, boolean shouldUnmark, int index) {
         System.out.println(DIVIDER);
         if (shouldUnmark) {
-            tasks.get(index).unmarkAsDone();
             System.out.println(MARKED_NOT_DONE_MESSAGE);
         } else {
-            tasks.get(index).markAsDone();
             System.out.println(MARKED_DONE_MESSAGE);
         }
         System.out.println(tasks.get(index));

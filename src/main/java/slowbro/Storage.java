@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -14,8 +13,8 @@ public class Storage {
     private static final String FIELD_SEPARATOR = "|";
 
     /** Loads all saved tasks, returning an empty array when no file exists. */
-    public ArrayList<Task> load() {
-        ArrayList<Task> tasks = new ArrayList<>();
+    public TaskList load() {
+        TaskList tasks = new TaskList();
         if (!Files.exists(DATA_FILE)) {
             return tasks;
         }
@@ -36,11 +35,11 @@ public class Storage {
     }
 
     /** Saves the given tasks to the hard disk. */
-    public void save(ArrayList<Task> tasks, int taskCount) {
+    public void save(TaskList tasks) {
         try {
             Files.createDirectories(DATA_FILE.getParent());
             StringBuilder data = new StringBuilder();
-            for (Task task : tasks) {
+            for (Task task : tasks.getTasks()) {
                 data.append(serializeTask(task)).append(System.lineSeparator());
             }
             Files.writeString(DATA_FILE, data.toString(), StandardCharsets.UTF_8);

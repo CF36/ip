@@ -1,6 +1,5 @@
 package slowbro;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /** Runs the Slowbro task-list application. */
@@ -66,12 +65,9 @@ public class SlowBro {
     /** Starts the application and processes commands until the user exits. */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<Task>();
         UI ui = new UI();
         Storage storage = new Storage();
-        ArrayList<Task> loadedTasks = storage.load();
-        int taskCount = loadedTasks.size();
-        tasks.addAll(loadedTasks);
+        TaskList tasks = storage.load();
 
         ui.printGreeting();
 
@@ -85,7 +81,7 @@ public class SlowBro {
             if (input.equals(BYE_COMMAND)) {
                 break;
             } else {
-                taskCount = handleCommand(input, tasks, taskCount, storage);
+                handleCommand(input, tasks, storage);
             }
         }
 
@@ -93,28 +89,28 @@ public class SlowBro {
         scanner.close();
     }
 
-    private static int handleCommand(String input, ArrayList<Task> tasks, int taskCount, Storage storage) {
+    private static void handleCommand(String input, TaskList tasks, Storage storage) {
         try {
             if (input.trim().isEmpty()) {
                 throw new InvalidCommandException(EMPTY_COMMAND_MESSAGE);
             }
 
             if (input.equals(LIST_COMMAND)) {
-                UI.listTasks(tasks, taskCount);
-                return taskCount;
+                UI.listTasks(tasks);
+                return;
             } else if (input.startsWith(MARK_COMMAND_PREFIX)
                     || input.startsWith(UNMARK_COMMAND_PREFIX)) {
-                markTask(input, tasks, taskCount, storage);
-                return taskCount;
+                markTask(input, tasks, storage);
+                return;
             } else if (input.startsWith(TODO_COMMAND_PREFIX)) {
                 if (input.equals(TODO_COMMAND_PREFIX)) {
                     throw new InvalidCommandException(EMPTY_TASK_MESSAGE);
                 }
                 String description = input.substring(TODO_COMMAND_LENGTH).trim();
                 validateTaskFields(description);
-                addTask(new Todo(description), tasks, taskCount);
-                storage.save(tasks, taskCount + 1);
-                return taskCount + 1;
+                addTask(new Todo(description), tasks);
+                storage.save(tasks);
+                return;
             } else if (input.startsWith(DEADLINE_COMMAND_PREFIX)) {
                 String command = input.substring(DEADLINE_COMMAND_LENGTH);
                 int byIndex = command.indexOf(BY_SEPARATOR);
@@ -122,9 +118,9 @@ public class SlowBro {
                     String description = command.substring(0, byIndex).trim();
                     String by = command.substring(byIndex + BY_SEPARATOR.length()).trim();
                     validateTaskFields(description, by);
-                    addTask(new Deadline(description, by), tasks, taskCount);
-                    storage.save(tasks, taskCount + 1);
-                    return taskCount + 1;
+                    addTask(new Deadline(description, by), tasks);
+                    storage.save(tasks);
+                    return;
                 }
                 throw new InvalidCommandException(DEADLINE_USAGE_MESSAGE);
             } else if (input.startsWith(EVENT_COMMAND_PREFIX)) {
@@ -136,9 +132,9 @@ public class SlowBro {
                     String from = command.substring(fromIndex + FROM_SEPARATOR_LENGTH, toIndex).trim();
                     String to = command.substring(toIndex + TO_SEPARATOR_LENGTH).trim();
                     validateTaskFields(description, from, to);
-                    addTask(new Event(description, from, to), tasks, taskCount);
-                    storage.save(tasks, taskCount + 1);
-                    return taskCount + 1;
+                    addTask(new Event(description, from, to), tasks);
+                    storage.save(tasks);
+                    return;
                 }
                 throw new InvalidCommandException(EVENT_USAGE_MESSAGE);
             } else if (input.startsWith(DELETE_COMMAND_PREFIX)) {
@@ -147,9 +143,9 @@ public class SlowBro {
                     throw new InvalidCommandException(DELETE_USAGE_MESSAGE);
                 }
                 int index = Integer.parseInt(words[1])-1;
-                deleteTask(tasks, taskCount, index);
-                storage.save(tasks, taskCount - 1);
-                return taskCount - 1;
+                deleteTask(tasks, index);
+                storage.save(tasks);
+                return;
             } else {
                 throw new InvalidCommandException(COMMAND_USAGE_MESSAGE);
             }
@@ -162,19 +158,15 @@ public class SlowBro {
         } catch (NumberFormatException e) {
             UI.printInvalidNumber();
         }
-        return taskCount;
     }
 
-    private static void deleteTask(ArrayList<Task> tasks, int taskCount, int index) {
-        if(index +1 > taskCount) {
-            throw new IndexOutOfBoundsException();
-        }
-        UI.printDeleteTask(tasks, taskCount, index);
-        tasks.remove(index);
+    private static void deleteTask(TaskList tasks, int index) {
+        Task deletedTask = tasks.get(index);
+        tasks.delete(index);
+        UI.printDeleteTask(deletedTask, tasks.size());
     }
 
-
-    private static void markTask(String input, ArrayList<Task> tasks, int taskCount, Storage storage) {
+    private static void markTask(String input, TaskList tasks, Storage storage) {
         boolean shouldUnmark = input.startsWith(UNMARK_COMMAND_PREFIX);
         int commandLength = shouldUnmark
                 ? UNMARK_COMMAND_LENGTH
@@ -183,12 +175,13 @@ public class SlowBro {
 
         try {
             int index = Integer.parseInt(indexText) - 1;
-            if (index < 0 || index >= taskCount) {
-                throw new IndexOutOfBoundsException();
+            if (shouldUnmark) {
+                tasks.unmark(index);
+            } else {
+                tasks.mark(index);
             }
-
             UI.printMarkTask(tasks, shouldUnmark, index);
-            storage.save(tasks, taskCount);
+            storage.save(tasks);
         } catch (NumberFormatException e) {
             UI.printInvalidTaskNumber();
         } catch (IndexOutOfBoundsException e) {
@@ -196,13 +189,13 @@ public class SlowBro {
         }
     }
 
-    private static void addTask(Task task, ArrayList<Task> tasks, int taskCount) {
+    private static void addTask(Task task, TaskList tasks) {
 //        if (taskCount >= MAX_TASK_COUNT) {
 //            throw new IllegalStateException(TASK_LIMIT_MESSAGE);
 //        }
 
         tasks.add(task);
-        UI.printAddTask(task, taskCount);
+        UI.printAddTask(task, tasks.size() - 1);
     }
 
     private static void validateTaskFields(String... fields) throws InvalidCommandException {
