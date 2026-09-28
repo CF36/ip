@@ -10,6 +10,7 @@ public class Parser {
     private static final String DEADLINE_COMMAND_PREFIX = "deadline";
     private static final String EVENT_COMMAND_PREFIX = "event";
     private static final String DELETE_COMMAND_PREFIX = "delete";
+    private static final String FIND_COMMAND_PREFIX = "find ";
     private static final String BY_SEPARATOR = " /by ";
     private static final String FROM_SEPARATOR = " /from ";
     private static final String TO_SEPARATOR = " /to ";
@@ -20,11 +21,11 @@ public class Parser {
     private static final String EVENT_USAGE_MESSAGE =
             " Usage: event <description> /from <start> /to <end>.";
     private static final String COMMAND_USAGE_MESSAGE =
-            " Available Commands: todo, deadline, event.";
+            " Available Commands: todo, deadline, event, list, mark, delete, find, bye.";
     private static final String DELETE_USAGE_MESSAGE = " Usage: delete <task number>";
 
     /** Represents the supported command types. */
-    public enum CommandType { BYE, LIST, MARK, TODO, DEADLINE, EVENT, DELETE }
+    public enum CommandType { BYE, LIST, MARK, TODO, DEADLINE, EVENT, DELETE, FIND }
 
     /** Represents a parsed command and its arguments. */
     public record Command(CommandType type, String description, String firstDetail,
@@ -65,6 +66,10 @@ public class Parser {
             }
             int index = Integer.parseInt(words[1]) - 1;
             return new Command(CommandType.DELETE, null, null, null, index, false);
+        } else if (input.startsWith(FIND_COMMAND_PREFIX)) {
+            String keyword = input.substring(FIND_COMMAND_PREFIX.length()).trim();
+            validateTaskFields(keyword);
+            return new Command(CommandType.FIND, keyword, null, null, -1, false);
         }
         throw new InvalidCommandException(COMMAND_USAGE_MESSAGE);
     }

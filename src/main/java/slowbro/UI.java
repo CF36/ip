@@ -1,10 +1,14 @@
 package slowbro;
 
+import java.util.List;
+
 public class UI {
     private static final String DIVIDER =
             "____________________________________________________________";
     private static final String TASK_LIST_HEADER =
             " Here are the tasks in your list:";
+    private static final String MATCHING_TASKS_HEADER =
+            " Here are the matching tasks in your list:";
     private static final String TASK_ADDED_HEADER =
             " Got it. I've added this task:";
     private static final String TASK_DELETED_HEADER =
@@ -51,6 +55,16 @@ public class UI {
         System.out.println(TASK_LIST_HEADER);
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println(String.format(" %d.%s", i + 1, tasks.get(i)));
+        }
+        System.out.println(DIVIDER);
+    }
+
+    /** Displays tasks matching a search keyword. */
+    public static void listMatchingTasks(List<Task> matchingTasks) {
+        System.out.println(DIVIDER);
+        System.out.println(MATCHING_TASKS_HEADER);
+        for (int i = 0; i < matchingTasks.size(); i++) {
+            System.out.println(String.format(" %d.%s", i + 1, matchingTasks.get(i)));
         }
         System.out.println(DIVIDER);
     }

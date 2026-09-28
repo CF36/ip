@@ -2,6 +2,7 @@ package slowbro;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /** Represents the collection of tasks managed by the application. */
 public class TaskList {
@@ -50,6 +51,20 @@ public class TaskList {
     /** Returns a copy of the tasks for persistence. */
     public List<Task> getTasks() {
         return new ArrayList<>(tasks);
+    }
+
+    /**
+     * Returns tasks whose descriptions contain the given keyword.
+     *
+     * @param keyword the keyword to search for
+     * @return matching tasks in their original order
+     */
+    public List<Task> find(String keyword) {
+        String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
+        return tasks.stream()
+                .filter(task -> task.getDescription().toLowerCase(Locale.ROOT)
+                        .contains(normalizedKeyword))
+                .toList();
     }
 
 }

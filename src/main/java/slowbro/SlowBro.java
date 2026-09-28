@@ -57,6 +57,9 @@ public class SlowBro {
                 deleteTask(tasks, command.taskIndex());
                 storage.save(tasks);
                 return;
+            } else if (command.type() == Parser.CommandType.FIND) {
+                UI.listMatchingTasks(tasks.find(command.description()));
+                return;
             }
         } catch (InvalidCommandException e) {
             UI.printInvalidCommand(e.getUsageMessage());
