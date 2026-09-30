@@ -2,6 +2,7 @@ package slowbro;
 
 import java.util.List;
 
+/** Provides methods for displaying application messages to the user. */
 public class UI {
     private static final String DIVIDER =
             "____________________________________________________________";
@@ -30,6 +31,7 @@ public class UI {
     private static final String EXIT_MESSAGE =
             "Bye. Hope to see you again soon!";
 
+    /** Displays the application greeting. */
     public static void printGreeting() {
         String banner = "  ____  _               _                \n"
                 + " / ___|| | ___         | |__  _ __ ___  \n"
@@ -44,12 +46,18 @@ public class UI {
         System.out.println(DIVIDER);
     }
 
+    /** Displays the application exit message. */
     public static void printExitMessage() {
         System.out.println(DIVIDER);
         System.out.println(EXIT_MESSAGE);
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Displays all tasks in the task list.
+     *
+     * @param tasks the task list to display
+     */
     public static void listTasks(TaskList tasks) {
         System.out.println(DIVIDER);
         System.out.println(TASK_LIST_HEADER);
@@ -69,6 +77,11 @@ public class UI {
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Displays an error message for an invalid command.
+     *
+     * @param usageMessage the correct command usage message
+     */
     public static void printInvalidCommand(String usageMessage) {
         System.out.println(DIVIDER);
         System.out.println(INVALID_COMMAND_MESSAGE);
@@ -76,6 +89,12 @@ public class UI {
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Displays a confirmation after adding a task.
+     *
+     * @param task the task that was added
+     * @param taskCount the number of tasks currently in the list
+     */
     public static void printAddTask(Task task, int taskCount) {
         System.out.println(DIVIDER);
         System.out.println(TASK_ADDED_HEADER);
@@ -84,6 +103,12 @@ public class UI {
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Displays a confirmation after deleting a task.
+     *
+     * @param task the task that was deleted
+     * @param taskCount the number of tasks remaining in the list
+     */
     public static void printDeleteTask(Task task, int taskCount) {
         System.out.println(DIVIDER);
         System.out.println(TASK_DELETED_HEADER);
@@ -92,24 +117,34 @@ public class UI {
         System.out.println(DIVIDER);
     }
 
+    /** Displays an error message when a task number is outside the valid range. */
     public static void printIndexOutOfBounds() {
         System.out.println(DIVIDER);
         System.out.println(OUT_OF_BOUNDS_TASK_NUMBER_MESSAGE);
         System.out.println(DIVIDER);
     }
 
+    /** Displays an error message when a task number is not a valid number. */
     public static void printInvalidNumber() {
         System.out.println(DIVIDER);
         System.out.println(INVALID_NUMBER_MESSAGE);
         System.out.println(DIVIDER);
     }
 
+    /** Displays an error message when a task number is missing or invalid. */
     public static void printInvalidTaskNumber() {
         System.out.println(DIVIDER);
         System.out.println(INVALID_TASK_NUMBER_MESSAGE);
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Displays a confirmation after marking or unmarking a task.
+     *
+     * @param tasks the task list containing the changed task
+     * @param shouldUnmark whether the task was marked as not done
+     * @param index the zero-based index of the changed task
+     */
     public static void printMarkTask(TaskList tasks, boolean shouldUnmark, int index) {
         System.out.println(DIVIDER);
         if (shouldUnmark) {
