@@ -61,9 +61,7 @@ public class UI {
     public static void listTasks(TaskList tasks) {
         System.out.println(DIVIDER);
         System.out.println(TASK_LIST_HEADER);
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println(String.format(" %d.%s", i + 1, tasks.get(i)));
-        }
+        printTasks(tasks.getTasks());
         System.out.println(DIVIDER);
     }
 
@@ -71,10 +69,14 @@ public class UI {
     public static void listMatchingTasks(List<Task> matchingTasks) {
         System.out.println(DIVIDER);
         System.out.println(MATCHING_TASKS_HEADER);
-        for (int i = 0; i < matchingTasks.size(); i++) {
-            System.out.println(String.format(" %d.%s", i + 1, matchingTasks.get(i)));
-        }
+        printTasks(matchingTasks);
         System.out.println(DIVIDER);
+    }
+
+    private static void printTasks(List<Task> tasks) {
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println(String.format(" %d.%s", i + 1, tasks.get(i)));
+        }
     }
 
     /**

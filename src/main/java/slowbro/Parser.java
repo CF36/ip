@@ -50,35 +50,57 @@ public class Parser {
         }
         if (isBye(input)) {
             return new Command(CommandType.BYE, null, null, null, -1, false);
-        } else if (input.equals(LIST_COMMAND)) {
+        }
+        if (input.equals(LIST_COMMAND)) {
             return new Command(CommandType.LIST, null, null, null, -1, false);
-        } else if (input.startsWith(MARK_COMMAND_PREFIX)
-                || input.startsWith(UNMARK_COMMAND_PREFIX)) {
-            boolean shouldUnmark = input.startsWith(UNMARK_COMMAND_PREFIX);
-            String prefix = shouldUnmark ? UNMARK_COMMAND_PREFIX : MARK_COMMAND_PREFIX;
-            int index = parseTaskIndex(input.substring(prefix.length()).trim());
-            return new Command(CommandType.MARK, null, null, null, index, shouldUnmark);
-        } else if (input.startsWith(TODO_COMMAND_PREFIX)) {
-            String description = input.substring(TODO_COMMAND_PREFIX.length()).trim();
-            validateTaskFields(description);
-            return new Command(CommandType.TODO, description, null, null, -1, false);
-        } else if (input.startsWith(DEADLINE_COMMAND_PREFIX)) {
+        }
+        if (input.startsWith(MARK_COMMAND_PREFIX) || input.startsWith(UNMARK_COMMAND_PREFIX)) {
+            return parseMark(input);
+        }
+        if (input.startsWith(TODO_COMMAND_PREFIX)) {
+            return parseTodo(input);
+        }
+        if (input.startsWith(DEADLINE_COMMAND_PREFIX)) {
             return parseDeadline(input);
-        } else if (input.startsWith(EVENT_COMMAND_PREFIX)) {
+        }
+        if (input.startsWith(EVENT_COMMAND_PREFIX)) {
             return parseEvent(input);
-        } else if (input.startsWith(DELETE_COMMAND_PREFIX)) {
-            String[] words = input.split("\\s+");
-            if (words.length != 2) {
-                throw new InvalidCommandException(DELETE_USAGE_MESSAGE);
-            }
-            int index = parseTaskIndex(words[1]);
-            return new Command(CommandType.DELETE, null, null, null, index, false);
-        } else if (input.startsWith(FIND_COMMAND_PREFIX)) {
-            String keyword = input.substring(FIND_COMMAND_PREFIX.length()).trim();
-            validateTaskFields(keyword);
-            return new Command(CommandType.FIND, keyword, null, null, -1, false);
+        }
+        if (input.startsWith(DELETE_COMMAND_PREFIX)) {
+            return parseDelete(input);
+        }
+        if (input.startsWith(FIND_COMMAND_PREFIX)) {
+            return parseFind(input);
         }
         throw new InvalidCommandException(COMMAND_USAGE_MESSAGE);
+    }
+
+    private static Command parseMark(String input) throws InvalidCommandException {
+        boolean shouldUnmark = input.startsWith(UNMARK_COMMAND_PREFIX);
+        String prefix = shouldUnmark ? UNMARK_COMMAND_PREFIX : MARK_COMMAND_PREFIX;
+        int index = parseTaskIndex(input.substring(prefix.length()).trim());
+        return new Command(CommandType.MARK, null, null, null, index, shouldUnmark);
+    }
+
+    private static Command parseTodo(String input) throws InvalidCommandException {
+        String description = input.substring(TODO_COMMAND_PREFIX.length()).trim();
+        validateTaskFields(description);
+        return new Command(CommandType.TODO, description, null, null, -1, false);
+    }
+
+    private static Command parseDelete(String input) throws InvalidCommandException {
+        String[] words = input.split("\\s+");
+        if (words.length != 2) {
+            throw new InvalidCommandException(DELETE_USAGE_MESSAGE);
+        }
+        int index = parseTaskIndex(words[1]);
+        return new Command(CommandType.DELETE, null, null, null, index, false);
+    }
+
+    private static Command parseFind(String input) throws InvalidCommandException {
+        String keyword = input.substring(FIND_COMMAND_PREFIX.length()).trim();
+        validateTaskFields(keyword);
+        return new Command(CommandType.FIND, keyword, null, null, -1, false);
     }
 
     /**

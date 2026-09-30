@@ -45,32 +45,19 @@ public class SlowBro {
     private static void handleCommand(String input, TaskList tasks, Storage storage) {
         try {
             Parser.Command command = Parser.parse(input);
-            if (command.type() == Parser.CommandType.LIST) {
-                UI.listTasks(tasks);
-                return;
-            } else if (command.type() == Parser.CommandType.MARK) {
-                markTask(command, tasks, storage);
-                return;
-            } else if (command.type() == Parser.CommandType.TODO) {
-                addTask(new Todo(command.description()), tasks);
-                storage.save(tasks);
-                return;
-            } else if (command.type() == Parser.CommandType.DEADLINE) {
-                addTask(new Deadline(command.description(), command.firstDetail()), tasks);
-                storage.save(tasks);
-                return;
-            } else if (command.type() == Parser.CommandType.EVENT) {
-                addTask(new Event(command.description(), command.firstDetail(),
-                        command.secondDetail()), tasks);
-                storage.save(tasks);
-                return;
-            } else if (command.type() == Parser.CommandType.DELETE) {
+            switch (command.type()) {
+            case LIST -> UI.listTasks(tasks);
+            case MARK -> markTask(command, tasks, storage);
+            case TODO -> addAndSave(new Todo(command.description()), tasks, storage);
+            case DEADLINE -> addAndSave(new Deadline(command.description(), command.firstDetail()), tasks, storage);
+            case EVENT -> addAndSave(new Event(command.description(), command.firstDetail(),
+                    command.secondDetail()), tasks, storage);
+            case DELETE -> {
                 deleteTask(tasks, command.taskIndex());
                 storage.save(tasks);
-                return;
-            } else if (command.type() == Parser.CommandType.FIND) {
-                UI.listMatchingTasks(tasks.find(command.description()));
-                return;
+            }
+            case FIND -> UI.listMatchingTasks(tasks.find(command.description()));
+            case BYE -> { }
             }
         } catch (InvalidCommandException e) {
             UI.printInvalidCommand(e.getUsageMessage());
@@ -128,6 +115,11 @@ public class SlowBro {
     private static void addTask(Task task, TaskList tasks) {
         tasks.add(task);
         UI.printAddTask(task, tasks.size() - 1);
+    }
+
+    private static void addAndSave(Task task, TaskList tasks, Storage storage) {
+        addTask(task, tasks);
+        storage.save(tasks);
     }
 
 }

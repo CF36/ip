@@ -11,6 +11,12 @@ import java.util.List;
 public class Storage {
     private static final Path DATA_FILE = Path.of("data", "slowbro.txt");
     private static final String FIELD_SEPARATOR = "|";
+    private static final String TODO_TYPE = "T";
+    private static final String DEADLINE_TYPE = "D";
+    private static final String EVENT_TYPE = "E";
+    private static final String DONE_VALUE = "true";
+    private static final String UNDONE_VALUE = "false";
+    private static final String DONE_STATUS_ICON = "X";
 
     /** Loads all saved tasks, returning an empty array when no file exists. */
     public TaskList load() {
@@ -22,13 +28,9 @@ public class Storage {
             List<String> lines = Files.readAllLines(DATA_FILE);
             for (String line : lines) {
                 if (!line.isBlank()) {
-                    try {
-                        Task task = parseTask(line);
-                        if (task != null) {
-                            tasks.add(task);
-                        }
-                    } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
-                        System.out.println("Warning: Skipping malformed saved task.");
+                    Task task = loadTask(line);
+                    if (task != null) {
+                        tasks.add(task);
                     }
                 }
             }
@@ -36,6 +38,15 @@ public class Storage {
             System.out.println("Warning: Unable to load saved tasks.");
         }
         return tasks;
+    }
+
+    private Task loadTask(String line) {
+        try {
+            return parseTask(line);
+        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+            System.out.println("Warning: Skipping malformed saved task.");
+            return null;
+        }
     }
 
     /** Saves the given tasks to the hard disk. */
@@ -62,17 +73,17 @@ public class Storage {
         String type;
         String[] fields;
         if (task instanceof Deadline deadline) {
-            type = "D";
+            type = DEADLINE_TYPE;
             fields = new String[] { deadline.getDescription(), deadline.getBy() };
         } else if (task instanceof Event event) {
-            type = "E";
+            type = EVENT_TYPE;
             fields = new String[] { event.getDescription(), event.getFrom(), event.getTo() };
         } else {
-            type = "T";
+            type = TODO_TYPE;
             fields = new String[] { task.getDescription() };
         }
         StringBuilder result = new StringBuilder(type + FIELD_SEPARATOR
-                + (task.getStatusIcon().equals("X")) + FIELD_SEPARATOR);
+                + (task.getStatusIcon().equals(DONE_STATUS_ICON)) + FIELD_SEPARATOR);
         for (String field : fields) {
             result.append(encode(field)).append(FIELD_SEPARATOR);
         }
@@ -92,9 +103,9 @@ public class Storage {
         }
 
         boolean isDone;
-        if ("true".equals(parts[1])) {
+        if (DONE_VALUE.equals(parts[1])) {
             isDone = true;
-        } else if ("false".equals(parts[1])) {
+        } else if (UNDONE_VALUE.equals(parts[1])) {
             isDone = false;
         } else {
             return null;
@@ -102,19 +113,19 @@ public class Storage {
 
         Task task;
         switch (parts[0]) {
-        case "T":
+        case TODO_TYPE:
             if (parts.length != 4) {
                 return null;
             }
             task = new Todo(decode(parts[2]));
             break;
-        case "D":
+        case DEADLINE_TYPE:
             if (parts.length != 5) {
                 return null;
             }
             task = new Deadline(decode(parts[2]), decode(parts[3]));
             break;
-        case "E":
+        case EVENT_TYPE:
             if (parts.length != 6) {
                 return null;
             }
