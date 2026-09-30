@@ -73,6 +73,7 @@ public class UI {
         System.out.println(DIVIDER);
     }
 
+    /** Prints tasks with one-based display numbering. */
     private static void printTasks(List<Task> tasks) {
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println(String.format(" %d.%s", i + 1, tasks.get(i)));

@@ -117,6 +117,7 @@ public class SlowBro {
         UI.printAddTask(task, tasks.size() - 1);
     }
 
+    /** Adds a task and persists the updated task list. */
     private static void addAndSave(Task task, TaskList tasks, Storage storage) {
         addTask(task, tasks);
         storage.save(tasks);

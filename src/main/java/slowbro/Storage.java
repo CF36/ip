@@ -40,6 +40,7 @@ public class Storage {
         return tasks;
     }
 
+    /** Parses one saved line and reports malformed data without stopping the load. */
     private Task loadTask(String line) {
         try {
             return parseTask(line);

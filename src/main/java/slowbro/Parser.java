@@ -75,6 +75,7 @@ public class Parser {
         throw new InvalidCommandException(COMMAND_USAGE_MESSAGE);
     }
 
+    /** Parses a mark or unmark command. */
     private static Command parseMark(String input) throws InvalidCommandException {
         boolean shouldUnmark = input.startsWith(UNMARK_COMMAND_PREFIX);
         String prefix = shouldUnmark ? UNMARK_COMMAND_PREFIX : MARK_COMMAND_PREFIX;
@@ -82,12 +83,14 @@ public class Parser {
         return new Command(CommandType.MARK, null, null, null, index, shouldUnmark);
     }
 
+    /** Parses a todo command. */
     private static Command parseTodo(String input) throws InvalidCommandException {
         String description = input.substring(TODO_COMMAND_PREFIX.length()).trim();
         validateTaskFields(description);
         return new Command(CommandType.TODO, description, null, null, -1, false);
     }
 
+    /** Parses a delete command. */
     private static Command parseDelete(String input) throws InvalidCommandException {
         String[] words = input.split("\\s+");
         if (words.length != 2) {
@@ -97,6 +100,7 @@ public class Parser {
         return new Command(CommandType.DELETE, null, null, null, index, false);
     }
 
+    /** Parses a find command. */
     private static Command parseFind(String input) throws InvalidCommandException {
         String keyword = input.substring(FIND_COMMAND_PREFIX.length()).trim();
         validateTaskFields(keyword);
