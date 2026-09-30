@@ -48,6 +48,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Converts a task into the encoded format used by the save file.
+     *
+     * @param task the task to serialize
+     * @return the encoded representation of the task
+     */
     private String serializeTask(Task task) {
         String type;
         String[] fields;
@@ -69,6 +75,12 @@ public class Storage {
         return result.toString();
     }
 
+    /**
+     * Converts one saved line into a task.
+     *
+     * @param line the encoded task line
+     * @return the parsed task, or {@code null} for an unknown task type
+     */
     private Task parseTask(String line) {
         String[] parts = line.split("\\|");
         Task task;

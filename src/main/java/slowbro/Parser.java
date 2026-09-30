@@ -74,6 +74,13 @@ public class Parser {
         throw new InvalidCommandException(COMMAND_USAGE_MESSAGE);
     }
 
+    /**
+     * Parses a deadline command into a structured command.
+     *
+     * @param input the user input containing the deadline command
+     * @return the parsed deadline command
+     * @throws InvalidCommandException if the command format is invalid
+     */
     private static Command parseDeadline(String input) throws InvalidCommandException {
         String command = input.substring(DEADLINE_COMMAND_PREFIX.length());
         int byIndex = command.indexOf(BY_SEPARATOR);
@@ -86,6 +93,13 @@ public class Parser {
         return new Command(CommandType.DEADLINE, description, by, null, -1, false);
     }
 
+    /**
+     * Parses an event command into a structured command.
+     *
+     * @param input the user input containing the event command
+     * @return the parsed event command
+     * @throws InvalidCommandException if the command format is invalid
+     */
     private static Command parseEvent(String input) throws InvalidCommandException {
         String command = input.substring(EVENT_COMMAND_PREFIX.length());
         int fromIndex = command.indexOf(FROM_SEPARATOR);
@@ -100,6 +114,12 @@ public class Parser {
         return new Command(CommandType.EVENT, description, from, to, -1, false);
     }
 
+    /**
+     * Ensures that all command fields are non-empty.
+     *
+     * @param fields the command fields to validate
+     * @throws InvalidCommandException if any field is empty
+     */
     private static void validateTaskFields(String... fields) throws InvalidCommandException {
         for (String field : fields) {
             if (field.isEmpty()) {

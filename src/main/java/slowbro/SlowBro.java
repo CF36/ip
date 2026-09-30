@@ -5,7 +5,11 @@ import java.util.Scanner;
 /** Runs the Slowbro task-list application. */
 public class SlowBro {
 
-    /** Starts the application and processes commands until the user exits. */
+    /**
+     * Starts the application and processes commands until the user exits.
+     *
+     * @param args command-line arguments, which are not used by the application
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Storage storage = new Storage();
@@ -31,6 +35,13 @@ public class SlowBro {
         scanner.close();
     }
 
+    /**
+     * Parses and executes one user command.
+     *
+     * @param input the command entered by the user
+     * @param tasks the current task list
+     * @param storage the storage handler used to save changes
+     */
     private static void handleCommand(String input, TaskList tasks, Storage storage) {
         try {
             Parser.Command command = Parser.parse(input);
@@ -72,12 +83,25 @@ public class SlowBro {
         }
     }
 
+    /**
+     * Deletes a task and displays the deletion confirmation.
+     *
+     * @param tasks the task list containing the task
+     * @param index the zero-based index of the task to delete
+     */
     private static void deleteTask(TaskList tasks, int index) {
         Task deletedTask = tasks.get(index);
         tasks.delete(index);
         UI.printDeleteTask(deletedTask, tasks.size());
     }
 
+    /**
+     * Marks or unmarks a task according to the parsed command and saves the change.
+     *
+     * @param command the parsed mark or unmark command
+     * @param tasks the current task list
+     * @param storage the storage handler used to save the change
+     */
     private static void markTask(Parser.Command command, TaskList tasks, Storage storage) {
 
         try {
@@ -95,6 +119,12 @@ public class SlowBro {
         }
     }
 
+    /**
+     * Adds a task to the task list and displays the addition confirmation.
+     *
+     * @param task the task to add
+     * @param tasks the task list to update
+     */
     private static void addTask(Task task, TaskList tasks) {
         tasks.add(task);
         UI.printAddTask(task, tasks.size() - 1);
