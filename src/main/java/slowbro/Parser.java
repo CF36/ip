@@ -6,10 +6,10 @@ public class Parser {
     private static final String LIST_COMMAND = "list";
     private static final String MARK_COMMAND_PREFIX = "mark ";
     private static final String UNMARK_COMMAND_PREFIX = "unmark ";
-    private static final String TODO_COMMAND_PREFIX = "todo";
-    private static final String DEADLINE_COMMAND_PREFIX = "deadline";
-    private static final String EVENT_COMMAND_PREFIX = "event";
-    private static final String DELETE_COMMAND_PREFIX = "delete";
+    private static final String TODO_COMMAND_PREFIX = "todo ";
+    private static final String DEADLINE_COMMAND_PREFIX = "deadline ";
+    private static final String EVENT_COMMAND_PREFIX = "event ";
+    private static final String DELETE_COMMAND_PREFIX = "delete ";
     private static final String FIND_COMMAND_PREFIX = "find ";
     private static final String BY_SEPARATOR = " /by ";
     private static final String FROM_SEPARATOR = " /from ";
@@ -23,6 +23,8 @@ public class Parser {
     private static final String COMMAND_USAGE_MESSAGE =
             " Available Commands: todo, deadline, event, list, mark, delete, find, bye.";
     private static final String DELETE_USAGE_MESSAGE = " Usage: delete <task number>";
+    private static final String POSITIVE_TASK_NUMBER_MESSAGE =
+            " Please provide a positive task number.";
 
     /** Represents the supported command types. */
     public enum CommandType { BYE, LIST, MARK, TODO, DEADLINE, EVENT, DELETE, FIND }
@@ -33,12 +35,17 @@ public class Parser {
 
     /** Returns whether the input is the exit command. */
     public static boolean isBye(String input) {
-        return input.equals(BYE_COMMAND);
+        return input != null && BYE_COMMAND.equals(input.trim());
     }
 
     /** Parses the given input into a command. */
     public static Command parse(String input) throws InvalidCommandException {
-        if (input.trim().isEmpty()) {
+        if (input == null) {
+            throw new InvalidCommandException(EMPTY_COMMAND_MESSAGE);
+        }
+
+        input = input.trim();
+        if (input.isEmpty()) {
             throw new InvalidCommandException(EMPTY_COMMAND_MESSAGE);
         }
         if (isBye(input)) {
@@ -49,7 +56,7 @@ public class Parser {
                 || input.startsWith(UNMARK_COMMAND_PREFIX)) {
             boolean shouldUnmark = input.startsWith(UNMARK_COMMAND_PREFIX);
             String prefix = shouldUnmark ? UNMARK_COMMAND_PREFIX : MARK_COMMAND_PREFIX;
-            int index = Integer.parseInt(input.substring(prefix.length()).trim()) - 1;
+            int index = parseTaskIndex(input.substring(prefix.length()).trim());
             return new Command(CommandType.MARK, null, null, null, index, shouldUnmark);
         } else if (input.startsWith(TODO_COMMAND_PREFIX)) {
             String description = input.substring(TODO_COMMAND_PREFIX.length()).trim();
@@ -64,7 +71,7 @@ public class Parser {
             if (words.length != 2) {
                 throw new InvalidCommandException(DELETE_USAGE_MESSAGE);
             }
-            int index = Integer.parseInt(words[1]) - 1;
+            int index = parseTaskIndex(words[1]);
             return new Command(CommandType.DELETE, null, null, null, index, false);
         } else if (input.startsWith(FIND_COMMAND_PREFIX)) {
             String keyword = input.substring(FIND_COMMAND_PREFIX.length()).trim();
@@ -126,5 +133,14 @@ public class Parser {
                 throw new InvalidCommandException(EMPTY_TASK_MESSAGE);
             }
         }
+    }
+
+    /** Converts a one-based task number into a zero-based index. */
+    private static int parseTaskIndex(String taskNumber) throws InvalidCommandException {
+        int parsedNumber = Integer.parseInt(taskNumber);
+        if (parsedNumber <= 0) {
+            throw new InvalidCommandException(POSITIVE_TASK_NUMBER_MESSAGE);
+        }
+        return parsedNumber - 1;
     }
 }

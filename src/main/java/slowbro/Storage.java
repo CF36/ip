@@ -22,9 +22,13 @@ public class Storage {
             List<String> lines = Files.readAllLines(DATA_FILE);
             for (String line : lines) {
                 if (!line.isBlank()) {
-                    Task task = parseTask(line);
-                    if (task != null) {
-                        tasks.add(task);
+                    try {
+                        Task task = parseTask(line);
+                        if (task != null) {
+                            tasks.add(task);
+                        }
+                    } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+                        System.out.println("Warning: Skipping malformed saved task.");
                     }
                 }
             }
@@ -82,22 +86,44 @@ public class Storage {
      * @return the parsed task, or {@code null} for an unknown task type
      */
     private Task parseTask(String line) {
-        String[] parts = line.split("\\|");
+        String[] parts = line.split("\\|", -1);
+        if (parts.length < 3) {
+            return null;
+        }
+
+        boolean isDone;
+        if ("true".equals(parts[1])) {
+            isDone = true;
+        } else if ("false".equals(parts[1])) {
+            isDone = false;
+        } else {
+            return null;
+        }
+
         Task task;
         switch (parts[0]) {
         case "T":
+            if (parts.length != 4) {
+                return null;
+            }
             task = new Todo(decode(parts[2]));
             break;
         case "D":
+            if (parts.length != 5) {
+                return null;
+            }
             task = new Deadline(decode(parts[2]), decode(parts[3]));
             break;
         case "E":
+            if (parts.length != 6) {
+                return null;
+            }
             task = new Event(decode(parts[2]), decode(parts[3]), decode(parts[4]));
             break;
         default:
             return null;
         }
-        if (Boolean.parseBoolean(parts[1])) {
+        if (isDone) {
             task.markAsDone();
         }
         return task;
